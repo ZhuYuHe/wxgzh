@@ -26,11 +26,18 @@ def get_price():
       "Content": "回复文本", // 消息内容
       "MsgId": 23637352235060880 // 唯一消息ID，可能发送多个重复消息，需要注意用此 ID 去重
     }
+    消息推送配置检查体:
+    {
+      "action": "CheckContainerPath"
+    }
     """
     params = request.get_json()
     print(params)
 
     # 检查消息类型和内容
+    if 'action' in params :
+        return make_succ_empty_response()
+
     if params['MsgType'] != 'text' or params['Content'] != '1':
         return make_err_response('action参数错误')
 

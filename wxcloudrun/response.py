@@ -6,7 +6,7 @@ import datetime
 
 
 def make_succ_empty_response():
-    data = json.dumps({'code': 0, 'data': {}})
+    data = json.dumps({'code': 200, 'data': {}})
     return Response(data, mimetype='application/json')
 
 
