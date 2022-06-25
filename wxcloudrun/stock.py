@@ -10,13 +10,13 @@ stock_list = \
     "贵州茅台" : ["600519", 12.56, 15000.0],
     "洋河股份" : ["002304", 15.07, 2100.0],
     "分众传媒" : ["002027", 144.42, 830.0],
-    "古井贡B" : ["200596", 5.29, 500.0],
+    "古井贡B " : ["200596", 5.29, 500.0],
     "陕西煤业" : ["601225", 96.95, 1225.0],
     "美的集团" : ["000333", 69.97, 4000.0],
     "海康威视" : ["002415", 94.33, 3120.0]
 }
 
-hk_stock = {"腾讯控股", "古井贡B"}
+hk_stock = {"腾讯控股", "古井贡B "}
 
 # 更新时间 5 分钟
 stock_uptime = 5
@@ -63,8 +63,6 @@ class StockUpdater():
             if stock in hk_stock:
                 market_value *= self.ex_rate
             dis = (market_value - ideal_value) / market_value
-            if stock == "古井贡B":
-                stock = "古井贡B "
             txt = "{0:<4}|{1:<{4}}|{2:<{5}}|{3:>4}%".\
                 format(stock, int(ideal_value), int(market_value), \
                     int(dis*100), 13-len(str(int(ideal_value))), 13-len(str(int(market_value))))
