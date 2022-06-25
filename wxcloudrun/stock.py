@@ -34,7 +34,7 @@ class StockUpdater():
     def __init__(self):
         self.content = ""
         self.content_uptime = int(time.time())
-        self.ex_rate = 0.8523
+        self.ex_rate = 0.0
         self.ex_rate_uptime = int(time.time())
 
     def get_stock_price(self):
@@ -47,7 +47,7 @@ class StockUpdater():
 
     def update_content(self):
         now = int(time.time())
-        if now - self.ex_rate_uptime > 86400:
+        if self.ex_rate <= 0 or now - self.ex_rate_uptime > 86400:
             self.update_ex_rate()
         text = [] 
         text.append("今日汇率1港币={}人民币\n".format(self.ex_rate))
