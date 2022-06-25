@@ -2,6 +2,7 @@ import logging
 import time
 import datetime
 import efinance as ef
+import re
 import requests
 
 stock_list = \
@@ -47,7 +48,7 @@ class StockUpdater():
 
     def update_content(self):
         now = int(time.time())
-        if self.ex_rate <= 0 or now - self.ex_rate_uptime > 86400:
+        if self.ex_rate <= 0 or now - self.ex_rate_uptime > 43200:
             self.update_ex_rate()
         text = [] 
         text.append("今日汇率1港币={}人民币\n".format(self.ex_rate))
@@ -76,12 +77,13 @@ class StockUpdater():
         logging.info("update content at {}".format(self.content_uptime))
 
     def update_ex_rate(self):
-        r = requests.get("http://hl.anseo.cn/")
-        l = r.text.split('\n')
-        t = '港元兑换人民币'
-        l = [x for x in l if t in x]
-        text = l[0].split('title')[0].split('人民币')[0].strip()[-6:]
-        self.ex_rate = float(text)
+        r = requests.get("https://www.boc.cn/sourcedb/whpj/index.html")
+        r.encoding = 'utf-8'
+        html = r.text 
+        idx = html.index('<td>港币</td>')
+        html = html[idx:idx+300]
+        result = re.findall('<td>(.*?)</td>', html)[-1]
+        self.ex_rate = round(float(result) / 100, 4)
         self.ex_rate_uptime = int(time.time())
         logging.info("update ex_rate at {}".format(self.ex_rate_uptime))
 
