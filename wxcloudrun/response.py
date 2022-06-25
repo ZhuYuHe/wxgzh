@@ -29,5 +29,6 @@ def make_err_response(err_msg):
 #}
 def make_text_suss_response(uid, pid, content):
     t = str(int(time.time()))
-    data = json.dumps({'ToUserName': uid, 'FromUserName': pid, 'CreateTime': t, 'MsgType': 'text', 'Content': content})
+    dict = {'ToUserName': uid, 'FromUserName': pid, 'CreateTime': t, 'MsgType': 'text', 'Content': content}
+    data = bytes(json.dumps(dict, ensure_ascii=False), encoding='utf-8')
     return Response(data, mimetype='application/json')

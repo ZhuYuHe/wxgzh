@@ -41,8 +41,7 @@ class StockUpdater():
             return self.content
         if self.content == "" or now - self.content_uptime >= 300:
             self.update_content()
-        #return self.content.encode("utf8").decode("utf8")
-        return self.content.encode('utf8').decode('utf8')
+        return self.content
 
     def update_content(self):
         now = int(time.time())
