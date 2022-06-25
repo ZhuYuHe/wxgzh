@@ -4,7 +4,9 @@ from run import app
 from wxcloudrun.dao import delete_counterbyid, query_counterbyid, insert_counter, update_counterbyid
 from wxcloudrun.model import Counters
 from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response, make_text_suss_response
+from wxcloudrun.stock import StockUpdater
 
+stockU = StockUpdater()
 
 @app.route('/')
 def index():
@@ -43,7 +45,7 @@ def get_price():
 
     uid = params['FromUserName']
     pid = params['ToUserName']
-    content = "success!" 
+    content = stockU.get_stock_price()
 
     return make_text_suss_response(uid, pid, content)
 
