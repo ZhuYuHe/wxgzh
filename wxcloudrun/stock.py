@@ -73,6 +73,7 @@ class StockUpdater():
             text.append(txt)
         self.content = '\n'.join(text)
         self.content_uptime = int(time.time())
+        logging.info("update content at {}".format(self.content_uptime))
 
     def update_ex_rate(self):
         r = requests.get("http://hl.anseo.cn/")
@@ -82,6 +83,7 @@ class StockUpdater():
         text = l[0].split('title')[0].split('人民币')[0].strip()[-6:]
         self.ex_rate = float(text)
         self.ex_rate_uptime = int(time.time())
+        logging.info("update ex_rate at {}".format(self.ex_rate_uptime))
 
     def is_trans_time(self):
         time = datetime.datetime.now()

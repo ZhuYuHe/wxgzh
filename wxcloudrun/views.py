@@ -1,5 +1,6 @@
 from datetime import datetime
 from flask import render_template, request
+import logging
 from run import app
 from wxcloudrun.dao import delete_counterbyid, query_counterbyid, insert_counter, update_counterbyid
 from wxcloudrun.model import Counters
@@ -34,7 +35,7 @@ def get_price():
     }
     """
     params = request.get_json()
-    print(params)
+    logging.info("params : {}".format(params))
 
     # 检查消息类型和内容
     if 'action' in params :
