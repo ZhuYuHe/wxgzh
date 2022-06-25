@@ -48,8 +48,8 @@ class StockUpdater():
         if now - self.ex_rate_uptime > 86400:
             self.update_ex_rate()
         text = [] 
-        text.append("当前汇率1港币={}人民币".format(self.ex_rate))
-        text.append("  名称  |理想市值|目前市值| 距离")
+        text.append("今日汇率1港币={}人民币\n".format(self.ex_rate))
+        text.append("  名称    |理想市值|目前市值| 距离")
         sd = []
         for stock, l in stock_list.items():
             stock_code = l[0]
@@ -63,7 +63,7 @@ class StockUpdater():
             dis = (market_value - ideal_value) / ideal_value
             if stock == "古井贡B":
                 stock = "古井贡B "
-            txt = "{:4}|{:8}|{:8}|{:4}%".format(stock, int(ideal_value), int(market_value), int(dis*100))
+            txt = "{0:<4}|{1:<8}|{2:<8}|{3:>4}%".format(stock, int(ideal_value), int(market_value), int(dis*100))
             sd.append((txt, dis))
         sd = sorted(sd, key=lambda x: x[1])
         for i in sd:
