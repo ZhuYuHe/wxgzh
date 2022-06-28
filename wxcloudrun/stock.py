@@ -20,7 +20,9 @@ stock_list = \
 # 美的
 '000333',
 # 海康
-'002415']
+'002415',
+# 福寿园
+'01448']
 ideal_values = \
 [36000.0,
 15000.0,
@@ -29,10 +31,11 @@ ideal_values = \
 500.0,
 1225.0,
 4000.0,
-3120.0]
+3120.0,
+110.0]
 
-hk_stock = {"腾讯控股", "古井贡B"}
-hk_stock = {'00700', '200596'}
+#hk_stock = {"腾讯控股", "古井贡B"}
+hk_stock = {'00700', '200596', '01448'}
 
 # 更新时间 2 分钟
 stock_uptime = 5
@@ -68,8 +71,7 @@ class StockUpdater():
         if self.ex_rate <= 0 or now - self.ex_rate_uptime > 43200:
             self.update_ex_rate()
         text = [] 
-        text.append("今日汇率1港币={}人民币\n".format(self.ex_rate))
-        text.append("  名称     |理想市值|目前市值| 距离")
+        text.append("    名称    |理想市值|目前市值| 距离")
         sd = []
         df = ef.stock.get_latest_quote(stock_list)
         df = df[['代码', '名称', '总市值', '更新时间']]
@@ -84,6 +86,8 @@ class StockUpdater():
                 market_value *= self.ex_rate
             ideal_value = ideal_values[i]
             dis = (market_value - ideal_value) / market_value
+            if stock_name == '福寿园':
+                stock_name = '福寿园  ' 
             txt = "{0:<4}|{1:<{4}}|{2:<{5}}|{3:>4}%".\
                 format(stock_name, int(ideal_value), int(market_value), \
                     int(dis*100), 13-len(str(int(ideal_value))), 13-len(str(int(market_value))))
@@ -92,9 +96,9 @@ class StockUpdater():
         for i in sd:
             txt, dis = i
             text.append(txt)
-        text.append("\n")
-        text.append("汇率更新时间: {}".format(self.ex_rate_time_str))
+        text.append("\n1港币={}人民币\n".format(self.ex_rate))
         text.append("市值更新时间: {}".format(self.content_time_str))
+        text.append("汇率更新时间: {}".format(self.ex_rate_time_str))
         self.content = '\n'.join(text)
         self.content_uptime = int(time.time())
         logging.info("update content at {}".format(self.content_time_str))
