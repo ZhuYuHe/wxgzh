@@ -71,7 +71,7 @@ class StockUpdater():
         if self.ex_rate <= 0 or now - self.ex_rate_uptime > 43200:
             self.update_ex_rate()
         text = [] 
-        text.append("    名称    |理想市值|目前市值| 距离")
+        text.append("   名称    |理想市值|目前市值| 距离")
         sd = []
         df = ef.stock.get_latest_quote(stock_list)
         df = df[['代码', '名称', '总市值', '更新时间']]
@@ -87,7 +87,7 @@ class StockUpdater():
             ideal_value = ideal_values[i]
             dis = (market_value - ideal_value) / market_value
             if stock_name == '福寿园':
-                stock_name = '福寿园  ' 
+                stock_name = '福寿园' + chr(0x3000)
             txt = "{0:<4}|{1:<{4}}|{2:<{5}}|{3:>4}%".\
                 format(stock_name, int(ideal_value), int(market_value), \
                     int(dis*100), 13-len(str(int(ideal_value))), 13-len(str(int(market_value))))
