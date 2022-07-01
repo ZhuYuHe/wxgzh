@@ -77,7 +77,10 @@ class StockUpdater():
         df = df[['代码', '名称', '总市值', '更新时间']]
         df['总市值'] /= 100000000
         df['总市值'] = df['总市值'].astype(int)
-        self.content_time_str = str(df.iloc[0,3])
+        tencent_time = str(df.iloc[0,3])
+        maotai_time = str(df.iloc[1,3])
+        #self.content_time_str = str(df.iloc[0,3])
+        self.content_time_str = tencent_time if tencent_time >= maotai_time else maotai_time
         for i in range(len(df)):
             stock_code = df.iloc[i, 0]
             stock_name = df.iloc[i, 1]
