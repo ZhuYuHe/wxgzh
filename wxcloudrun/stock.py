@@ -61,6 +61,8 @@ class StockUpdater():
     def get_stock_price(self):
         now = int(time.time())
         if self.content != "" and not self.is_trans_time():
+            if int(self.content_time_str[11:13]) < 16:
+                self.update_content()
             return self.content
         if self.content == "" or now - self.content_uptime >= stock_uptime * 60:
             self.update_content()
