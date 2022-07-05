@@ -89,7 +89,7 @@ class StockUpdater():
             self.update_ex_rate()
         text = [] 
         #text.append("   名称    |理想市值|目前市值| 距离")
-        text.append("   名称    |距买点距离|距卖点距离")
+        text.append("   名称     |距买点距离|距卖点距离")
         sd = []
         df = ef.stock.get_latest_quote(stock_list)
         df = df[['代码', '名称', '总市值', '更新时间']]
@@ -112,8 +112,8 @@ class StockUpdater():
             if stock_code not in ['01448', '002415', '000333']:
                 sold_dis = (sold_value - market_value) / market_value
             if stock_name == '福寿园':
-                stock_name = '福寿园' + chr(0x3000)
-            txt = "{0:<3}|{1:>8}%|{2:>8}%".\
+                stock_name = '福寿园' + chr(0x3000) + '  '
+            txt = "{0:<3}|{1:>10}% |{2:>10}%".\
                 format(stock_name, int(dis*100), int(sold_dis*100))
             sd.append((txt, dis))
         sd = sorted(sd, key=lambda x: x[1])
