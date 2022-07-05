@@ -112,7 +112,7 @@ class StockUpdater():
             if stock_code not in ['01448', '002415', '000333']:
                 sold_dis = (sold_value - market_value) / market_value
             if stock_name == '福寿园':
-                stock_name = '福寿园' + chr(0x3000) + '  '
+                stock_name = '福寿园' + chr(0x3000) + ' '
             txt = "{0:<3}|{1:>10}% |{2:>10}%".\
                 format(stock_name, int(dis*100), int(sold_dis*100))
             sd.append((txt, dis))
