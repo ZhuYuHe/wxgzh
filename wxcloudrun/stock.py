@@ -24,15 +24,30 @@ stock_list = \
 # 福寿园
 '01448']
 ideal_values = \
-[36000.0,
-15000.0,
-2100.0,
-830.0,
-500.0,
-1225.0,
-4000.0,
-3120.0,
-110.0]
+[
+    36000.0,
+    15000.0,
+    2100.0,
+    830.0,
+    500.0,
+    1225.0,
+    4000.0,
+    3120.0,
+    110.0
+]
+
+sold_values = \
+[
+    80000.0,
+    35000.0,
+    5000.0,
+    1980.0,
+    1150.0,
+    2600.0,
+    0.0,
+    0.0,
+    0.0
+]
 
 #hk_stock = {"腾讯控股", "古井贡B"}
 hk_stock = {'00700', '200596', '01448'}
@@ -73,7 +88,8 @@ class StockUpdater():
         if self.ex_rate <= 0 or now - self.ex_rate_uptime > 43200:
             self.update_ex_rate()
         text = [] 
-        text.append("   名称    |理想市值|目前市值| 距离")
+        #text.append("   名称    |理想市值|目前市值| 距离")
+        text.append("   名称    |距买点距离|距卖点距离")
         sd = []
         df = ef.stock.get_latest_quote(stock_list)
         df = df[['代码', '名称', '总市值', '更新时间']]
@@ -90,12 +106,15 @@ class StockUpdater():
             if stock_code in hk_stock:
                 market_value *= self.ex_rate
             ideal_value = ideal_values[i]
+            sold_value = sold_values[i]
             dis = (market_value - ideal_value) / market_value
+            sold_dis = 0
+            if stock_code not in ['01448', '002415', '000333']:
+                sold_dis = (sold_value - market_value) / market_value
             if stock_name == '福寿园':
                 stock_name = '福寿园' + chr(0x3000)
-            txt = "{0:<4}|{1:<{4}}|{2:<{5}}|{3:>4}%".\
-                format(stock_name, int(ideal_value), int(market_value), \
-                    int(dis*100), 13-len(str(int(ideal_value))), 13-len(str(int(market_value))))
+            txt = "{0:<3}|{1:>8}%|{2:>8}%".\
+                format(stock_name, int(dis*100), int(sold_dis*100))
             sd.append((txt, dis))
         sd = sorted(sd, key=lambda x: x[1])
         for i in sd:
@@ -104,6 +123,7 @@ class StockUpdater():
         text.append("\n1港币={}人民币\n".format(self.ex_rate))
         text.append("市值更新时间: {}".format(self.content_time_str))
         text.append("汇率更新时间: {}".format(self.ex_rate_time_str))
+        text.append("\n备注：计算距离时分母均为当前市值")
         self.content = '\n'.join(text)
         self.content_uptime = int(time.time())
         logging.info("update content at {}".format(self.content_time_str))
