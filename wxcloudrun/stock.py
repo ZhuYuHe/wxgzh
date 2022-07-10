@@ -120,7 +120,7 @@ class StockUpdater():
                 stock_name = '福寿园' + chr(0x3000) + ' '
             txt = "{0:<3}|{1:>10}% |{2:>10}%".\
                 format(stock_name, int(dis*100), int(sold_dis*100))
-            txt2 = "{0:<3}|{1:>10}|{2:>10}|{3:>10}".\
+            txt2 = "{0:<3}|{1:>5}|{2:>5}|{3:>5}".\
                 format(stock_name, int(ideal_value), int(market_value), int(sold_value))
             sd.append((txt, dis))
             text2.append(txt2)
