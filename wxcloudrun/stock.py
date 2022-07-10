@@ -73,23 +73,28 @@ class StockUpdater():
         self.ex_rate_uptime = int(time.time())
         self.ex_rate_time_str = "2022-06-26 10:30:00"
 
-    def get_stock_price(self):
+        self.value_content = ""
+
+    def get_stock_price(self, mod=1):
         now = int(time.time())
         if self.content != "" and not self.is_trans_time():
             if int(self.content_time_str[11:13]) < 16:
                 self.update_content()
-            return self.content
+            return self.content if mod == 1 else self.value_content
         if self.content == "" or now - self.content_uptime >= stock_uptime * 60:
             self.update_content()
-        return self.content
+        
+        return self.content if mod == 1 else self.value_content
 
     def update_content(self):
         now = int(time.time())
         if self.ex_rate <= 0 or now - self.ex_rate_uptime > 43200:
             self.update_ex_rate()
         text = [] 
+        text2 = []
         #text.append("   名称    |理想市值|目前市值| 距离")
         text.append("   名称     |距买点距离|距卖点距离")
+        text2.append("   名称     |买点市值|当前市值|卖点市值")
         sd = []
         df = ef.stock.get_latest_quote(stock_list)
         df = df[['代码', '名称', '总市值', '更新时间']]
@@ -115,16 +120,27 @@ class StockUpdater():
                 stock_name = '福寿园' + chr(0x3000) + ' '
             txt = "{0:<3}|{1:>10}% |{2:>10}%".\
                 format(stock_name, int(dis*100), int(sold_dis*100))
+            txt2 = "{0:<3}|{1:>10}|{2:>10}|{3:>10}".\
+                format(stock_name, int(ideal_value), int(market_value), int(sold_value))
             sd.append((txt, dis))
+            text2.append(txt2)
         sd = sorted(sd, key=lambda x: x[1])
         for i in sd:
             txt, dis = i
             text.append(txt)
+
         text.append("\n1港币={}人民币\n".format(self.ex_rate))
         text.append("市值更新时间: {}".format(self.content_time_str))
         text.append("汇率更新时间: {}".format(self.ex_rate_time_str))
-        text.append("\n备注：计算距离时分母均为当前市值")
+        text.append("\n备注：距离=(当前市值-买/卖点)/当前市值")
+        text.append("发送 2 查看买/卖点市值与当前市值")
+        text2.append("\n1港币={}人民币\n".format(self.ex_rate))
+        text2.append("市值更新时间: {}".format(self.content_time_str))
+        text2.append("汇率更新时间: {}".format(self.ex_rate_time_str))
+        text2.append("\n备注: 发送 1 查看当前市值与买卖点距离")
+
         self.content = '\n'.join(text)
+        self.value_content = '\n'.join(text2)
         self.content_uptime = int(time.time())
         logging.info("update content at {}".format(self.content_time_str))
 
@@ -150,4 +166,4 @@ class StockUpdater():
 
 if __name__ == '__main__':
     stock_up = StockUpdater()
-    print(stock_up.get_stock_price())
+    print(stock_up.get_stock_price(2))

@@ -41,12 +41,12 @@ def get_price():
     if 'action' in params :
         return make_succ_empty_response()
 
-    if params['MsgType'] != 'text' or params['Content'].strip() != '1':
+    if params['MsgType'] != 'text' or params['Content'].strip() not in ['1', '2']:
         return make_err_response('action参数错误')
 
     uid = params['FromUserName']
     pid = params['ToUserName']
-    content = stockU.get_stock_price()
+    content = stockU.get_stock_price(int(params['Content'].strip()))
 
     return make_text_suss_response(uid, pid, content)
 
