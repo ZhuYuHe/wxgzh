@@ -94,7 +94,7 @@ class StockUpdater():
         text2 = []
         #text.append("   名称    |理想市值|目前市值| 距离")
         text.append("   名称     |距买点距离|距卖点距离")
-        text2.append("   名称     |买点市值|当前市值|卖点市值")
+        text2.append("   名称     |买点|当前市值|卖点")
         sd = []
         df = ef.stock.get_latest_quote(stock_list)
         df = df[['代码', '名称', '总市值', '更新时间']]
