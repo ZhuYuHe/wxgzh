@@ -4,17 +4,26 @@ import logging
 from run import app
 from wxcloudrun.dao import delete_counterbyid, query_counterbyid, insert_counter, update_counterbyid
 from wxcloudrun.model import Counters
-from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response, make_text_suss_response
+from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response, make_text_suss_response, make_mini_programe_suss_response
 from wxcloudrun.stock import StockUpdater
 
 stockU = StockUpdater()
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
     """
     :return: 返回index页面
     """
     return render_template('index.html')
+
+@app.route('/api/mini_pro_price')
+def get_mini_programe_price():
+    """
+    :return : '{"update_time": "xxx", "data":[{name:"xx", "idealValue": xx, "marketValue": xx,
+                "soldValue": xx, "idealDis": "xx", "soldDis": "xx"}, ...]}'
+    """
+    content = stockU.get_stock_price(3)
+    return make_mini_programe_suss_response(content)
 
 @app.route('/api/stock_price', methods=['POST'])
 def get_price():

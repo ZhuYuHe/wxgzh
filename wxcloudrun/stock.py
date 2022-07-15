@@ -1,3 +1,4 @@
+import json
 import logging
 import time
 import datetime
@@ -23,6 +24,18 @@ stock_list = \
 '002415',
 # 福寿园
 '01448']
+nick_names = \
+[
+"企鹅",
+"小茅",
+"小羊",
+"小分",
+"小古",
+"小陕",
+"小美",
+"小海",
+"小福",
+]
 ideal_values = \
 [
     36000.0,
@@ -72,19 +85,28 @@ class StockUpdater():
         self.ex_rate = 0.0
         self.ex_rate_uptime = int(time.time())
         self.ex_rate_time_str = "2022-06-26 10:30:00"
-
         self.value_content = ""
+        self.mini_programe_content = {}
+
+    def get_content_by_mod(self, mode = 1):
+        if mode == 1:
+            return self.content
+        elif mode == 2:
+            return self.value_content
+        elif mode == 3:
+            return self.mini_programe_content
 
     def get_stock_price(self, mod=1):
         now = int(time.time())
         if self.content != "" and not self.is_trans_time():
             if int(self.content_time_str[11:13]) < 16:
                 self.update_content()
-            return self.content if mod == 1 else self.value_content
+            return self.get_content_by_mod(mod)
+
         if self.content == "" or now - self.content_uptime >= stock_uptime * 60:
             self.update_content()
         
-        return self.content if mod == 1 else self.value_content
+        return self.get_content_by_mod(mod)
 
     def update_content(self):
         now = int(time.time())
@@ -92,6 +114,7 @@ class StockUpdater():
             self.update_ex_rate()
         text = [] 
         text2 = []
+        mini_data = []
         #text.append("   名称    |理想市值|目前市值| 距离")
         text.append("   名称     |距买点距离|距卖点距离")
         text2.append("   名称     |买点|当前市值|卖点")
@@ -112,10 +135,14 @@ class StockUpdater():
                 market_value *= self.ex_rate
             ideal_value = ideal_values[i]
             sold_value = sold_values[i]
+            nick_name = nick_names[i]
             dis = (market_value - ideal_value) / market_value
             sold_dis = 0
             if stock_code not in ['01448', '002415', '000333']:
                 sold_dis = (sold_value - market_value) / market_value
+            mini_item = {"name": nick_name, "idealValue": int(ideal_value), "marketValue": int(market_value),
+                         "soldValue": int(sold_value), "idealDis": str(int(dis*100))+'%', "soldDis": str(int(sold_dis*100))+'%'}
+            mini_data.append((mini_item, int(dis*100)))
             if stock_name == '福寿园':
                 stock_name = '福寿园' + chr(0x3000) + ' '
             txt = "{0:<3}|{1:>10}% |{2:>10}%".\
@@ -125,6 +152,9 @@ class StockUpdater():
             sd.append((txt, dis))
             text2.append(txt2)
         sd = sorted(sd, key=lambda x: x[1])
+        mini_data = sorted(mini_data, key=lambda x : x[1])
+        mini_data = [x[0] for x in mini_data]
+        self.mini_programe_content = {"update_time": self.content_time_str, "data": mini_data}
         for i in sd:
             txt, dis = i
             text.append(txt)
@@ -166,4 +196,7 @@ class StockUpdater():
 
 if __name__ == '__main__':
     stock_up = StockUpdater()
-    print(stock_up.get_stock_price(2))
+    dict = {'code': 200, 'data': stock_up.get_stock_price(3)}
+    print(json.dumps(dict, ensure_ascii=False))
+    #data = bytes(json.dumps(dict, ensure_ascii=False), encoding='utf-8')
+    #print(data)

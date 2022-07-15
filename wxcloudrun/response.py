@@ -32,3 +32,8 @@ def make_text_suss_response(uid, pid, content):
     dict = {'ToUserName': uid, 'FromUserName': pid, 'CreateTime': t, 'MsgType': 'text', 'Content': content}
     data = bytes(json.dumps(dict, ensure_ascii=False), encoding='utf-8')
     return Response(data, mimetype='application/json')
+
+def make_mini_programe_suss_response(content):
+    dict = {'code': 200, 'data': content}
+    data = bytes(json.dumps(dict, ensure_ascii=False), encoding='utf-8')
+    return Response(data, mimetype='application/json')
