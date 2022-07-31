@@ -57,9 +57,9 @@ sold_values = \
     1980.0,
     1150.0,
     2600.0,
-    0.0,
-    0.0,
-    0.0
+    12000.0,
+    8400.0,
+    330.0
 ]
 
 #hk_stock = {"腾讯控股", "古井贡B"}
@@ -138,8 +138,7 @@ class StockUpdater():
             nick_name = nick_names[i]
             dis = (market_value - ideal_value) / market_value
             sold_dis = 0
-            if stock_code not in ['01448', '002415', '000333']:
-                sold_dis = (sold_value - market_value) / market_value
+            sold_dis = (sold_value - market_value) / market_value
             mini_item = {"name": nick_name, "idealValue": int(ideal_value), "marketValue": int(market_value),
                          "soldValue": int(sold_value), "idealDis": str(int(dis*100))+'%', "soldDis": str(int(sold_dis*100))+'%'}
             mini_data.append((mini_item, int(dis*100)))

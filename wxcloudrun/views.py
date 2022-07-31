@@ -16,7 +16,7 @@ def index():
     """
     return render_template('index.html')
 
-@app.route('/api/mini_pro_price')
+@app.route('/api/mini_pro_price', methods=['GET'])
 def get_mini_programe_price():
     """
     :return : '{"update_time": "xxx", "data":[{name:"xx", "idealValue": xx, "marketValue": xx,
